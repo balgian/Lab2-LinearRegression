@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from linearregression import LinearRegression
 
+# Questo dovrebbe essere il mio fork
 
 def main() -> None:
     # Task 1: Get data
