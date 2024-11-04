@@ -45,7 +45,7 @@ class LinearRegression:
                 max_iterations = 1000
                 for iteration in range(max_iterations):
                     # Compute the gradient
-                    if np.isinf(gradient := x_b.T @ (x_b @ self.beta - self.y)).any():
+                    if np.isinf(gradient := x_b.T @ (x_b @ self.beta - self.y) ).any():
                         self.beta = np.linalg.pinv(x_b.T @ x_b) @ x_b.T @ self.y
                         break
                     # Clip the gradient: fixing the leght of the numerical gradient

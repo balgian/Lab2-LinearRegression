@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 from linearregression import LinearRegression
 
+
 def main() -> None:
     # Task 1: Get data
     path_data: str = os.path.join(os.path.dirname(__file__), "Data")
@@ -29,11 +30,11 @@ def main() -> None:
         x_turkish: np.ndarray = turkish_data[0].values
         y_turkish: np.ndarray = turkish_data[1].values
 
-        x_turkish_train.append(x_turkish[:int(len(x_turkish) * 0.1)])
-        y_turkish_train.append(y_turkish[:int(len(y_turkish) * 0.1)])
+        x_turkish_train.append(x_turkish[:int(len(x_turkish) * 0.1)+1])
+        y_turkish_train.append(y_turkish[:int(len(y_turkish) * 0.1)+1])
 
-        x_turkish_test.append(x_turkish[int(len(x_turkish) * 0.1):])
-        y_turkish_test.append(y_turkish[int(len(y_turkish) * 0.1):])
+        x_turkish_test.append(x_turkish[int(len(x_turkish) * 0.05)+1:])
+        y_turkish_test.append(y_turkish[int(len(y_turkish) * 0.05)+1:])
 
     # Split the mtk data into train and test
     mkt_data = mtk_data.sample(n=len(mtk_data))
@@ -41,11 +42,11 @@ def main() -> None:
     x_mkt: np.ndarray = mkt_data.drop(columns=["Model", " mpg"]).values
     y_mkt: np.ndarray = mkt_data[" mpg"].values
 
-    x_mkt_train: np.ndarray = x_mkt[:int(len(x_mkt) * 0.05)]
-    y_mkt_train: np.ndarray = y_mkt[:int(len(y_mkt) * 0.05)]
+    x_mkt_train: np.ndarray = x_mkt[:int(len(x_mkt) * 0.05)+1]
+    y_mkt_train: np.ndarray = y_mkt[:int(len(y_mkt) * 0.05)+1]
 
-    x_mkt_test: np.ndarray = x_mkt[int(len(x_mkt) * 0.05):]
-    y_mkt_test: np.ndarray = y_mkt[int(len(y_mkt) * 0.05):]
+    x_mkt_test: np.ndarray = x_mkt[int(len(x_mkt) * 0.05)+1:]
+    y_mkt_test: np.ndarray = y_mkt[int(len(y_mkt) * 0.05)+1:]
 
     # Task 3: Test regression model
     # Test the turkish data and plot
@@ -61,7 +62,7 @@ def main() -> None:
         mse_turk_train = np.mean((x_turkish_train[i] - model.predict(x_turkish_train[i])) ** 2)
         print(f"Turkish data without intercept subset {i + 1}")
         print(f"MSE on test data: {mse_turk}")
-        print(f"MSE on train data: {mse_turk_train}")
+        print(f"MSE on train data: {mse_turk_train}\n")
 
         # Plot
         plt.scatter(x_turkish_test[i], y_turkish_test[i], color=f"C{i}", zorder=1, alpha=0.1, marker=".")
@@ -87,7 +88,7 @@ def main() -> None:
         mse_turk_train = np.mean((x_turkish_train[i] - model.predict(x_turkish_train[i])) ** 2)
         print(f"Turkish data with intercept subset {i + 1}")
         print(f"MSE on test data: {mse_turk}")
-        print(f"MSE on train data: {mse_turk_train}")
+        print(f"MSE on train data: {mse_turk_train}\n")
 
         plt.scatter(x_turkish_test[i], y_turkish_test[i], color=f"C{i}", zorder=1, alpha=0.1, marker=".")
         plt.plot(x_turkish_test[i], y_hat, label=f"Model subset  {i + 1}", color=f"C{i}", alpha=0.9, linewidth=0.5,
@@ -100,7 +101,49 @@ def main() -> None:
     plt.legend(loc="best", fontsize="small", frameon=False)
     plt.show()
 
+    ########################################################################
     # Test the mtk data and plot
+    # Without intercept
+    model: LinearRegression = LinearRegression(x_mkt_train[:, 2], y_mkt_train)
+    model.fit()
+    y_hat = model.predict(x_mkt_test[:, 2])
+
+    plt.scatter(x_mkt_test[:, 2], y_mkt_test, color=f"C1", zorder=1, alpha=0.4, marker=".")
+    plt.plot(x_mkt_test[:, 2], y_hat, color=f"C1", alpha=0.9, linewidth=0.5,
+             zorder=2)
+
+    plt.title("Linear Regression Model without intercept")
+    plt.xlabel("Weight", fontsize="small")
+    plt.ylabel("MPG", fontsize="small", labelpad=2)
+    plt.grid(True, which="both", linestyle="--", color="gray", linewidth=0.5, zorder=0, alpha=0.25)
+    plt.show()
+
+    ########################################################################
+    # Test the mtk data and plot
+    # With intercept
+    model: LinearRegression = LinearRegression(x_mkt_train[:, 2], y_mkt_train)
+    model.fit(intercept=True)
+    y_hat = model.predict(x_mkt_test[:, 2])
+
+    plt.scatter(x_mkt_test[:, 2], y_mkt_test, color=f"C1", zorder=1, alpha=0.4, marker=".")
+    plt.plot(x_mkt_test[:, 2], y_hat, color=f"C1", alpha=0.9, linewidth=0.5,
+             zorder=2)
+
+    plt.title("Linear Regression Model with intercept")
+    plt.xlabel("Weight", fontsize="small")
+    plt.ylabel("MPG", fontsize="small", labelpad=2)
+    plt.grid(True, which="both", linestyle="--", color="gray", linewidth=0.5, zorder=0, alpha=0.25)
+    plt.show()
+
+    # Compute the mean squared error: mse = np.mean((y - y_pred) ** 2)
+    # Mtk data
+    mse_test = np.mean((y_mkt_test - y_hat) ** 2)
+    mse_train = np.mean((y_mkt_train - model.predict(x_mkt_train[:, 2])) ** 2)
+    print(f"Mtk data, with only mpg and weight, without intercept")
+    print(f"MSE on test data: {mse_test}")
+    print(f"MSE on train data: {mse_train}\n")
+
+    ########################################################################
     # Without intercept
     model: LinearRegression = LinearRegression(x_mkt_train, y_mkt_train)
     model.fit()
@@ -144,10 +187,12 @@ def main() -> None:
     # Mtk data
     mse_test = np.mean((y_mkt_test - y_hat) ** 2)
     mse_train = np.mean((y_mkt_train - model.predict(x_mkt_train)) ** 2)
-    print(f"Mtk data without intercept")
+    print(f"Mtk data with intercept")
     print(f"MSE on test data: {mse_test}")
-    print(f"MSE on train data: {mse_train}")
+    print(f"MSE on train data: {mse_train}\n")
 
+
+    ########################################################################
     # With intercept
     model: LinearRegression = LinearRegression(x_mkt_train, y_mkt_train)
     model.fit(intercept=True)
@@ -193,7 +238,7 @@ def main() -> None:
     mse_train = np.mean((y_mkt_train - model.predict(x_mkt_train)) ** 2)
     print(f"Mtk data with intercept")
     print(f"MSE on test data: {mse_test}")
-    print(f"MSE on train data: {mse_train}")
+    print(f"MSE on train data: {mse_train}\n")
 
 
 if __name__ == "__main__":
