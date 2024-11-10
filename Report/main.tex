@@ -5,7 +5,8 @@
 \usepackage{cite}
 \usepackage{newtxtext,newtxmath}
 \usepackage{tablefootnote}
-\title{Title}
+
+\title{Linear Regression}
 \author{
 	Gian Marco Balia\\
 	Robotic Engineering - University of Genoa\\
@@ -20,16 +21,19 @@
 
 \end{abstract}
 \begin{IEEEkeywords}
-
+linear regression, multivariable, mean squared error
 \end{IEEEkeywords}
 
 \section{Introduction}
+Linear regression is a foundational method in machine learning that aims to model the relationship between a dependent variable and one or more independent variables by fitting a linear equation to observed data. In essence, it seeks to predict a continuous target variable by finding the best-fitting line (often called the “regression line”) through the data points, minimizing the distance (or error) between the predicted values and the actual data points. This is achieved by adjusting the slope and intercept of the line to reduce the overall prediction error, typically measured by a cost function such as \textit{Mean Squared Error} (MSE) \cite{montgomery2012introduction}.
+The simplicity and interpretability of linear regression make it a popular choice for many applications, especially when the relationship between variables is linear or approximately linear. In its simplest form, the model is defined by the equation  $Y = \beta_0 + \beta_1 X + \epsilon$ , where  $Y$  is the dependent variable,  $X$  is the independent variable,  $\beta_0$  is the intercept,  $\beta_1$  is the slope of the line, and  $\epsilon$  represents the error term \cite{hastie2009elements}.
+Linear regression is widely used not only for predictive analysis but also as a diagnostic tool to understand relationships between variables, particularly in areas like economics, biology, and social sciences. It serves as a baseline in machine learning to assess more complex models, and although it has limitations—such as assuming a linear relationship and being sensitive to outliers—its transparency makes it a vital tool for model interpretability \cite{james2013introduction.
 
 \section{Material and methods}
 
 \subsection{Data processing}
 
-\subsection{[Title Model]}
+\subsection{Linear Regression Model}
 
 
 \subsection{Model evaluation}
