@@ -30,8 +30,8 @@ def main() -> None:
         x_turkish: np.ndarray = turkish_data[0].values
         y_turkish: np.ndarray = turkish_data[1].values
 
-        x_turkish_train.append(x_turkish[:int(len(x_turkish) * 0.1)+1])
-        y_turkish_train.append(y_turkish[:int(len(y_turkish) * 0.1)+1])
+        x_turkish_train.append(x_turkish[:int(len(x_turkish) * 0.05)+1])
+        y_turkish_train.append(y_turkish[:int(len(y_turkish) * 0.05)+1])
 
         x_turkish_test.append(x_turkish[int(len(x_turkish) * 0.05)+1:])
         y_turkish_test.append(y_turkish[int(len(y_turkish) * 0.05)+1:])
@@ -51,6 +51,7 @@ def main() -> None:
     # Task 3: Test regression model
     # Test the turkish data and plot
     # Without intercept
+    mean_mse_turk: list[float] = list()
     for i in range(10):
         model: LinearRegression = LinearRegression(x_turkish_train[i], y_turkish_train[i])
         model.fit()
@@ -58,16 +59,20 @@ def main() -> None:
 
         # Compute the mean squared error: mse = np.mean((y - y_pred) ** 2)
         # Turkish data
-        mse_turk = np.mean((x_turkish_test - y_hat) ** 2)
-        mse_turk_train = np.mean((x_turkish_train[i] - model.predict(x_turkish_train[i])) ** 2)
-        print(f"Turkish data without intercept subset {i + 1}")
-        print(f"MSE on test data: {mse_turk}")
-        print(f"MSE on train data: {mse_turk_train}\n")
+        mse_turk: float = np.mean((x_turkish_test - y_hat) ** 2)
+        mse_turk_train: float = np.mean((x_turkish_train[i] - model.predict(x_turkish_train[i])) ** 2)
+        # print(f"Turkish data without intercept subset {i + 1}")
+        # print(f"MSE on test data: {mse_turk}")
+        # print(f"MSE on train data: {mse_turk_train}\n")
+        mean_mse_turk.append(mse_turk)
 
         # Plot
         plt.scatter(x_turkish_test[i], y_turkish_test[i], color=f"C{i}", zorder=1, alpha=0.1, marker=".")
         plt.plot(x_turkish_test[i], y_hat, label=f"Model subset  {i + 1}", color=f"C{i}", alpha=0.9, linewidth=0.5,
                  zorder=2)
+
+    print(f"Mean MSE for Turkish data without intercept: {np.median(mean_mse_turk)},"
+          f"{np.quantile(mean_mse_turk, 0.25)}, {np.quantile(mean_mse_turk, 0.75)}")
 
     plt.title("Linear Regression Model")
     plt.xlabel("Standard and Poor's 500 return index", fontsize="small")
@@ -76,6 +81,7 @@ def main() -> None:
     plt.legend(loc="best", fontsize="small", frameon=False)
     plt.show()
 
+    mean_mse_turk: list[float] = list()
     # With intercept
     for i in range(10):
         model: LinearRegression = LinearRegression(x_turkish_train[i], y_turkish_train[i])
@@ -84,15 +90,19 @@ def main() -> None:
 
         # Compute the mean squared error: mse = np.mean((y - y_pred) ** 2)
         # Turkish data
-        mse_turk = np.mean((x_turkish_test - y_hat) ** 2)
-        mse_turk_train = np.mean((x_turkish_train[i] - model.predict(x_turkish_train[i])) ** 2)
-        print(f"Turkish data with intercept subset {i + 1}")
-        print(f"MSE on test data: {mse_turk}")
-        print(f"MSE on train data: {mse_turk_train}\n")
+        mse_turk: float = np.mean((x_turkish_test - y_hat) ** 2)
+        mse_turk_train: float = np.mean((x_turkish_train[i] - model.predict(x_turkish_train[i])) ** 2)
+        # print(f"Turkish data with intercept subset {i + 1}")
+        # print(f"MSE on test data: {mse_turk}")
+        # print(f"MSE on train data: {mse_turk_train}\n")
+        mean_mse_turk.append(mse_turk)
 
         plt.scatter(x_turkish_test[i], y_turkish_test[i], color=f"C{i}", zorder=1, alpha=0.1, marker=".")
         plt.plot(x_turkish_test[i], y_hat, label=f"Model subset  {i + 1}", color=f"C{i}", alpha=0.9, linewidth=0.5,
                  zorder=2)
+
+    print(f"Mean MSE for Turkish data with intercept: {np.median(mean_mse_turk)},"
+          f"{np.quantile(mean_mse_turk, 0.25)}, {np.quantile(mean_mse_turk, 0.75)}")
 
     plt.title("Linear Regression Model with intercept")
     plt.xlabel("Standard and Poor's 500 return index", fontsize="small")
