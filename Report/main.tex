@@ -81,8 +81,7 @@ The presented Linear Regression Model, works in two different methods. For the T
 			y = \beta_0 + \beta_1 x + \varepsilon
 		\end{equation}
 	The intercept $\beta_0$ in linear regression is the value of $y$ when all predictors $x$ are zero. Including the intercept allows the model to better fit the data, especially when it’s unrealistic to assume that $y = 0$ in the absence of independent variables, which forces the model to pass through the origin. It is useful only if there are theoretical reasons for y to be zero when the predictors are zero.
-	
-	In linear regression, $\epsilon$ represents the \textit{model's error} or \textit{residual term} \cice{james2021LinearRegression}. Epsilon captures all the variations in $y$ that cannot be predicted by the independent variables used in the model.
+	In linear regression, $\epsilon$ represents the \textit{model's error} or \textit{residual term} \cite{james2021LinearRegression}. Epsilon captures all the variations in $y$ that cannot be predicted by the independent variables used in the model.
 	Mathematically, epsilon is the difference between the observed value of $y$ and the value predicted by the linear model:
 	\begin{equation*}
 		\varepsilon= y_{\tiny\text{observed}} - y_{\tiny\text{predicted}}
@@ -93,7 +92,8 @@ The presented Linear Regression Model, works in two different methods. For the T
 	\begin{equation}
 		y = X \mathbf w
 	\end{equation}
-	where $X$ are the independent variables represented by matrix form and $\mathbf w$ is the slope's vector. If it considered the intercept must be added a unit column at the beginning of the $X$ matrix.
+	where $X$ are the independent variables represented by matrix form and $\mathbf w$ is the slope's vector. If it considered the intercept must be added a unit column at the beginning of the $X$ matrix. \\
+	Another important point considered to implement the model is the computation of the pseudo-inverse in case of exceptions. In particular, the pseudo-inverse (which is a generalization of the matrix inverse, without the condition of invertibility) is computed when, during the computation of the gradient, the matrix is not invertible. This means that the system of linear equations would not have solutions, and the pseudo-inverse is used to provide an approximate solution.
 	\subsection{Model evaluation}
 	\textit{Mean Squared Error} (MSE) is a key metric that quantifies the overall accuracy of the model. It is computed as the average of the squared differences between the observed values and the predicted values across all data points:
 	\begin{equation}
